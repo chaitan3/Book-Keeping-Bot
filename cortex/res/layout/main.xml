@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" 
+              android:layout_height="fill_parent" 
+              android:orientation="vertical" >
+    <TextView android:id="@+id/heading"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Book Bot" />
+    <Button android:id="@+id/scan"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:onClick="startBookScanner" 
+            android:text="Scan Books" />
+    <Button android:id="@+id/exit"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:onClick="exitApp"
+            android:text="Exit" />
+    
+</LinearLayout>

@@ -1,0 +1,4 @@
+<resources>
+    <usb-accessory model="BookBot" manufacturer="IITB" 
+version="1.0"/>
+</resources>
