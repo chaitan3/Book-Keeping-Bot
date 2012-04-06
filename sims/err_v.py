@@ -15,8 +15,7 @@ for n in arange(0.1, 0.5, 0.1):
   v.append(n)
   errors.append(average(errs))  
   print n, errors[-1]
-plot(v, errors)
-show()
-
+print v
+print errors
 
 

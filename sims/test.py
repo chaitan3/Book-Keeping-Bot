@@ -3,15 +3,19 @@ from sim import simulate
 
 #Destination
 dests = array([
-[0.25, 0.65],
-[0.85,0.15],
+[0.05,0.15],
+[0.15,0.35],
+[0.25,0.45],
+[0.35,0.65],
+[0.45,0.75],
+[0.65,0.95],
 [1.0, 1.0]
 ])
 
 #initial point
 initial = [0.0, 0.0]
 
-[x, y, gx, gy, err] = simulate(5, initial, dests, 0.5)
+[x, y, gx, gy, err] = simulate(10, initial, dests, 0.2)
 
 print err
   
@@ -26,5 +30,5 @@ desty = [initial[1]]
 for i in dests:
   destx.append(i[0])
   desty.append(i[1])
-plot(destx, desty)
+plot(destx, desty, 'g--',)
 show()

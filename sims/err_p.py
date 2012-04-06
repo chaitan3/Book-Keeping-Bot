@@ -15,7 +15,7 @@ for n in range(1, 11):
   p.append(n)
   errors.append(average(errs))  
   print n, errors[-1]
-plot(p, errors)
-show()
+print p
+print errors
 
 
