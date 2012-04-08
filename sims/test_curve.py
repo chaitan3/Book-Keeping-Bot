@@ -11,7 +11,7 @@ dests = array([
 #initial point
 initial = [0.0, 0.0]
 
-[x, y, gx, gy, err] = simulate(1, l, initial, pi/2, dests, 1.0)
+[x, y, gx, gy, err] = simulate(10, l, initial, pi/2, dests, 1.0)
 
 print err
   
