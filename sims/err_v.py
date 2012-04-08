@@ -3,13 +3,14 @@ from sim import simulate
 v = []
 errors = []
 initial = [0.0,0.0]
-dests = array([[1.0, 1.0]])
-for n in arange(0.1, 0.5, 0.1):
+l = 10.0
+dests = array([[l, l]])
+for n in arange(1.0, 2.0, 0.2):
   errs = []
 
   for j in range(0,10):
     print n, j
-    tmp = simulate(10, initial, dests, n)
+    tmp = simulate(10, l, initial, dests, n)
     errs.append(tmp[-1])
     
   v.append(n)

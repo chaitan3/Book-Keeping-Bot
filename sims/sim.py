@@ -3,32 +3,32 @@ from pylab import *
 #sensor error modelling, bot destination check
 #Error plots pitch, speed, different trajectories
 
-def simulate(n, initial, dests, v):
+def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=1e-1, c_align=1e-1 ):
 
   #Global environment coordinates
   env = array(initial)
   bot = env.copy()
   prev_dest = env.copy()
-  env_a = pi/2
-  bot_a = env_a
+  env_a = init_a
+  bot_a = init_a
   x = [initial[0]]
   y = [initial[1]]
   
   #Laser Grid
-  d = 1.0/n
-  gx = arange(d, 1, d)
+  d = l/(n+1)
+  gx = arange(d, l, d)
   gy = gx.copy()
   #Laser intercept size
   di = d*1e-2
 
   #Slippage error
-  v_err = v*(4e-2)
+  v_err = v*(c_slip)
   #Motor alignment error
-  al_err = v*(1e-1)
+  al_err = v*(c_align)
   v_al = 0
 
   #Sensor Angle error 
-  a_err = 1e-1
+  a_err = c_mag
 
   #Time step 
   dt = 1e-2
@@ -52,7 +52,7 @@ def simulate(n, initial, dests, v):
 
   def turn():
     a = arctan2(dest[1]-bot[1],dest[0]-bot[0])
-    return [a + a_err*(rand()-0.5), a, al_err*(rand()-0.5)]
+    return [a + a_err*normal(), a, al_err*normal()]
 
   for dest in dests:
     
@@ -62,8 +62,8 @@ def simulate(n, initial, dests, v):
     no_y = 0
 
     while norm(bot-dest) > 1e-2:
-      env[0] += (v + v_al + v_err*(rand()-0.5))*cos(env_a)*dt
-      env[1] += (v + v_err*(rand()-0.5))*sin(env_a)*dt
+      env[0] += (v + v_al + v_err*normal())*cos(env_a)*dt
+      env[1] += (v + v_err*normal())*sin(env_a)*dt
       
       bot[0] += v*cos(bot_a)*dt
       bot[1] += v*sin(bot_a)*dt
