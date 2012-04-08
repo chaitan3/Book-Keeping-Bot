@@ -11,7 +11,7 @@ for n in arange(1.0, 2.1,0.1):
   
   for j in range(0,10):
     print n, j
-    tmp = simulate(10, l, initial, pi/2, dests, v)
+    tmp = simulate(10, l, initial, pi/2, dests, n)
     errs.append(tmp[-1])
     
   v.append(n)
