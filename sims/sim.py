@@ -20,6 +20,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=1e-1, c_align=1
   gy = gx.copy()
   #Laser intercept size
   di = d*1e-2
+  gy=delete(gy,2)
 
   #Slippage error
   v_err = v*(c_slip)
