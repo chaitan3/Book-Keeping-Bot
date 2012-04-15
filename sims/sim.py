@@ -3,7 +3,7 @@ from pylab import *
 #sensor error modelling, bot destination check
 #Error plots pitch, speed, different trajectories
 
-def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=1e-1, c_align=1e-1 ):
+def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1e-2 ):
 
   #Global environment coordinates
   env = array(initial)
@@ -20,16 +20,22 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=1e-1, c_align=1
   gy = gx.copy()
   #Laser intercept size
   di = d*1e-2
-  gy=delete(gy,2)
+  #Laser Failure
+  #gy=delete(gy,2)
 
   #Slippage error
   v_err = v*(c_slip)
   #Motor alignment error
-  al_err = v*(c_align)
-  v_al = 0
+  v_al = v*(c_align)
+  #Speed of left and right wheels
+  v_r = v + v_al
+  v_l = v
 
   #Sensor Angle error 
   a_err = c_mag
+  
+  #Distance between motor wheels
+  b = 0.1
 
   #Time step 
   dt = 1e-2
@@ -52,34 +58,51 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=1e-1, c_align=1
     return 0
 
   def turn():
+    #Desired orientation according to the bot
     a = arctan2(dest[1]-bot[1],dest[0]-bot[0])
-    return [a + a_err*normal(), a, al_err*normal()]
+    #return actual environment orientation
+    return a + a_err*normal()
 
   for dest in dests:
     
-    [env_a,bot_a, v_al] = turn()
+    env_a = turn()
     
     no_x = 0
     no_y = 0
 
-    while norm(bot-dest) > 1e-2:
-      env[0] += (v + v_al + v_err*normal())*cos(env_a)*dt
-      env[1] += (v + v_err*normal())*sin(env_a)*dt
-      
-      bot[0] += v*cos(bot_a)*dt
-      bot[1] += v*sin(bot_a)*dt
-      
+    while (bot[0] < dest[0]) and (bot[1] < dest[1]):
       hit = horiz_grid() 
       if hit:
         no_y = hit
+        #reset y coordinate
         bot[1] = env[1]
-        [env_a,bot_a, v_al] = turn()
+        env_a = turn()
         
       hit = vert_grid()
       if hit:
         no_x = hit
+        #reset x coordinate
         bot[0] = env[0]
-        [env_a,bot_a, v_al] = turn()
+        env_a = turn()
+      
+      
+      #Bot reads magnetometer
+      bot_a = env_a + a_err*normal()
+      
+      #Bot propagation
+      bot_v = (v_r + v_l)/2
+      bot[0] += bot_v*cos(bot_a)*dt
+      bot[1] += bot_v*sin(bot_a)*dt
+      
+      #Environment propagation
+      v_ra = v_r + v_err*normal()
+      v_la = v_l + v_err*normal()
+      env_v = (v_ra + v_la)/2
+      w = (v_ra-v_la)/b
+      
+      env[0] += env_v*cos(env_a)*dt
+      env[1] += env_v*sin(env_a)*dt
+      env_a += w*dt
       
       x.append(env[0])
       y.append(env[1])
