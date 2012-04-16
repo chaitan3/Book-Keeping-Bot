@@ -43,6 +43,9 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
   #Error
   err = 0
 
+  #Path length
+  path = 0.0
+
   def vert_grid():
     for i in gx:
       if i != no_x:
@@ -69,6 +72,8 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
     
     no_x = 0
     no_y = 0
+
+    path += norm(dest-prev_dest)
 
     while (bot[0] < dest[0]) and (bot[1] < dest[1]):
       hit = horiz_grid() 
@@ -112,7 +117,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
    
     prev_dest = dest.copy()
 
-  err /= t
+  err /= t*path
   return [x, y, gx, gy, err]
   
 

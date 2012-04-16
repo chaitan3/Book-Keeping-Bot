@@ -5,11 +5,17 @@ avg_errors = []
 max_errors = []
 initial = [0.0,0.0]
 l = 10.0
-dests = array([[l, l]])
-for n in arange(1.0, 2.1,0.1):
+dests = array([
+[l/5,l/5],
+[2*l/5,2*l/5],
+[3*l/5,3*l/5],
+[4*l/5,4*l/5],
+[l,l]
+])
+for n in arange(1.0, 5.5,0.5):
   errs = []
   
-  for j in range(0,10):
+  for j in range(0,100):
     print n, j
     tmp = simulate(10, l, initial, pi/2, dests, n)
     errs.append(tmp[-1])

@@ -5,6 +5,10 @@ l = 10.0
 
 #Destination
 dests = array([
+[l/5,l/5],
+[2*l/5,2*l/5],
+[3*l/5,3*l/5],
+[4*l/5,4*l/5],
 [l,l]
 ])
 
@@ -27,5 +31,8 @@ for i in dests:
   destx.append(i[0])
   desty.append(i[1])
 plot(destx, desty, 'g--',label='Desired path')
+xlabel('x(m)')
+ylabel('y(m)')
+axis('image')
 legend(loc=2)
 show()
