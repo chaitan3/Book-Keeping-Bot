@@ -42,6 +42,8 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
   t = 0
   #Error
   err = 0
+  #Corrections
+  corr = 0
 
   #Path length
   path = 0.0
@@ -82,6 +84,8 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
         #reset y coordinate
         bot[1] = env[1]
         env_a = turn()
+        #Increment the number of corrections
+        corr += 1
         
       hit = vert_grid()
       if hit:
@@ -89,7 +93,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
         #reset x coordinate
         bot[0] = env[0]
         env_a = turn()
-      
+        corr += 1
       
       #Bot reads magnetometer
       bot_a = env_a + a_err*normal()
@@ -118,7 +122,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
     prev_dest = dest.copy()
 
   err /= t*path
-  return [x, y, gx, gy, err]
+  return [x, y, gx, gy, corr, err]
   
 
 

@@ -16,19 +16,19 @@ dests = array([
 initial = [0.0, 0.0]
 
 #stud mag without grid
-[x, y, gx, gy, err] = simulate(0, l, initial, pi/2, dests, 1.0, c_mag = 1e-2,c_align=0)
+[x, y, gx, gy, corr, err] = simulate(0, l, initial, pi/2, dests, 1.0, c_mag = 1e-2,c_align=0)
 print err
-plot(x,y, 'black', label='Good Sensor')
+plot(x,y, 'black', label='High resolution Sensor')
 
 #hagga mag without grid
-[x, y, gx, gy, err] = simulate(0, l, initial, pi/2, dests, 1.0, c_mag = 1.5e-1,c_align=0)
+[x, y, gx, gy, corr, err] = simulate(0, l, initial, pi/2, dests, 1.0, c_mag = 1.5e-1,c_align=0)
 print err
-plot(x,y, 'black', label='Bad sensor', linestyle='-.')
+plot(x,y, 'black', label='Low resolution sensor', linestyle='-.')
 
 #hagga mag with grid
-[x, y, gx, gy, err] = simulate(10, l, initial, pi/2, dests, 1.0, c_mag = 1.5e-1,c_align=0)
+[x, y, gx, gy, corr, err] = simulate(10, l, initial, pi/2, dests, 1.0, c_mag = 1.5e-1,c_align=0)
 print err
-plot(x,y, 'gray',label='Bad sensor with Grid')
+plot(x,y, 'gray',label='Low resolution sensor with Grid')
 
 legend(loc=2)
 
