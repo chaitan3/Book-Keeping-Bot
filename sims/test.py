@@ -20,7 +20,7 @@ initial = [0.0, 0.0]
 print err
 print corr
   
-plot(x,y, label='Actual Path')
+plot(x,y, label='Actual Path',linewidth=2)
 axis([0, l, 0, l])
 for i in gx:
   plot([i,i], [0,l], 'red')
@@ -31,9 +31,9 @@ desty = [initial[1]]
 for i in dests:
   destx.append(i[0])
   desty.append(i[1])
-plot(destx, desty, 'g--',label='Desired path')
-xlabel('x(m)')
-ylabel('y(m)')
+plot(destx, desty, 'g--',label='Desired path', linewidth=2)
+xlabel('x coordinate position, x(m)')
+ylabel('y coordinate position, y(m)')
 axis('image')
 legend(loc=2)
 show()

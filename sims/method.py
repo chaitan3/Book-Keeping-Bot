@@ -18,17 +18,22 @@ initial = [0.0, 0.0]
 #stud mag without grid
 [x, y, gx, gy, corr, err] = simulate(0, l, initial, pi/2, dests, 1.0, c_mag = 1e-2,c_align=0)
 print err
-plot(x,y, 'black', label='High resolution Sensor')
+plot(x,y, 'black', label='High-res sensor', linewidth=2)
+
+#stud mag with grid
+[x, y, gx, gy, corr, err] = simulate(10, l, initial, pi/2, dests, 1.0, c_mag = 1e-2,c_align=0)
+print err
+plot(x,y, 'black', label='High-res sensor with Grid', linestyle='-.', linewidth=3)
 
 #hagga mag without grid
 [x, y, gx, gy, corr, err] = simulate(0, l, initial, pi/2, dests, 1.0, c_mag = 1.5e-1,c_align=0)
 print err
-plot(x,y, 'black', label='Low resolution sensor', linestyle='-.')
+plot(x,y, 'gray', label='Low-res sensor', linewidth=2)
 
 #hagga mag with grid
 [x, y, gx, gy, corr, err] = simulate(10, l, initial, pi/2, dests, 1.0, c_mag = 1.5e-1,c_align=0)
 print err
-plot(x,y, 'gray',label='Low resolution sensor with Grid')
+plot(x,y, 'gray',label='Low-res sensor with Grid', linestyle='-.', linewidth=3)
 
 legend(loc=2)
 
@@ -42,9 +47,9 @@ desty = [initial[1]]
 for i in dests:
   destx.append(i[0])
   desty.append(i[1])
-plot(destx, desty,label='Desired path', linestyle='--')
-xlabel('x(m)')
-ylabel('y(m)')
+plot(destx, desty,label='Desired path', linestyle='--', linewidth=2)
+xlabel('x coordinate position, x(m)')
+ylabel('y coordinate position, y(m)')
 axis('image')
 show()
 

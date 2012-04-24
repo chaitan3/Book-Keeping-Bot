@@ -12,7 +12,7 @@ for n in arange(l, l*10, l):
   errs = []
   dests=array(curvature(n))
   corrs.append(0)
-  for j in range(0,1000):
+  for j in range(0,1):
     print n, j
     tmp = simulate(10, l, initial, pi/2, dests, 1.0)
     errs.append(tmp[-1])
@@ -22,9 +22,10 @@ for n in arange(l, l*10, l):
   avg_errors.append(average(errs))  
   max_errors.append(max(errs))
   
-  print n, avg_errors[-1], max_errors[-1], corrs
+  print n, avg_errors[-1], max_errors[-1]
 print p
 print avg_errors
 print max_errors
+print corrs
 
 

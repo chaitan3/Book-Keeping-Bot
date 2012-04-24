@@ -122,6 +122,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
     prev_dest = dest.copy()
 
   err /= t*path
+  corr /= path
   return [x, y, gx, gy, corr, err]
   
 
