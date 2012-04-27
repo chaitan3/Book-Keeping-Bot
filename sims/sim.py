@@ -3,7 +3,7 @@ from pylab import *
 #sensor error modelling, bot destination check
 #Error plots pitch, speed, different trajectories
 
-def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1e-2 ):
+def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=10e-2 ):
 
   #Global environment coordinates
   env = array(initial)
@@ -44,6 +44,8 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
   err = 0
   #Corrections
   corr = 0
+  #Count 
+  count = 0
 
   #Path length
   path = 0.0
@@ -94,6 +96,12 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=4e-2, c_mag=5e-2, c_align=1
         bot[0] = env[0]
         env_a = turn()
         corr += 1
+        
+      #corrections every 10 time steps
+      if count == 10:
+        count = 0
+        env_a = turn()
+      count += 1
       
       #Bot reads magnetometer
       bot_a = env_a + a_err*normal()
