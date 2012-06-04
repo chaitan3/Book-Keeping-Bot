@@ -1,15 +1,7 @@
 from pylab import *
-from time import sleep
 
 #sensor error modelling, bot destination check
 #Error plots pitch, speed, different trajectories
-
-def restrict_angle(a):
-	if a > pi:
-		return restrict_angle(a - 2*pi)
-	elif a < -pi:
-		return restrict_angle(a + 2*pi)
-	return a
 
 def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=10e-2 ):
 
@@ -35,6 +27,9 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
   v_err = v*(c_slip)
   #Motor alignment error
   v_al = v*(c_align)
+  #Speed of left and right wheels
+  v_r = v + v_al
+  v_l = v
 
   #Sensor Angle error 
   a_err = c_mag
@@ -49,15 +44,11 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
   err = 0
   #Corrections
   corr = 0
+  #Count 
+  count = 0
 
   #Path length
   path = 0.0
-  
-  #Control Law constants
-  k1 = 1
-  k2 = 10
-  beta = 0.1
-  gamma = 0.4
 
   def vert_grid():
     for i in gx:
@@ -73,29 +64,28 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
           return i
     return 0
 
-  for index in range(0,len(dests)):
-	  
-    dest = dests[index]
-    if index > 0:
-	  prev_dest = dests[index - 1]
-    if index < len(dests) - 1:
-	  next_dest = dests[index + 1]
-    else:
-	  next_dest = 2*dests[index]-dests[index-1]
-		
+  def turn():
+    #Desired orientation according to the bot
+    a = arctan2(dest[1]-bot[1],dest[0]-bot[0])
+    #return actual environment orientation
+    return a + a_err*normal()
+
+  for dest in dests:
+    
+    env_a = turn()
+    
     no_x = 0
     no_y = 0
 
     path += norm(dest-prev_dest)
-    
-    r = 1
 
-    while r > 0.1:
+    while (bot[0] < dest[0]) and (bot[1] < dest[1]):
       hit = horiz_grid() 
       if hit:
         no_y = hit
         #reset y coordinate
         bot[1] = env[1]
+        env_a = turn()
         #Increment the number of corrections
         corr += 1
         
@@ -104,31 +94,19 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
         no_x = hit
         #reset x coordinate
         bot[0] = env[0]
+        env_a = turn()
         corr += 1
         
+      #corrections every 10 time steps
+      if count == 10:
+        count = 0
+        env_a = turn()
+      count += 1
+      
       #Bot reads magnetometer
-      bot_a = restrict_angle(env_a + a_err*normal())
+      bot_a = env_a + a_err*normal()
       
-      #Control Law
-      #Calculate delta, theta and r
-      target_a = arctan2((dest[1]-bot[1]),(dest[0]-bot[0]))
-      delta = restrict_angle(bot_a - target_a)
-      next_a = arctan2((next_dest[1]-dest[1]),(next_dest[0]-dest[0]))
-      theta = restrict_angle(next_a - target_a)
-      r = norm(dest-bot)
-      #Todo: smoothener, along with setting constants
       
-      #Calculate kappa, v and omega
-      k = (-1.0 / r) * (k2 * (delta - arctan(-k1 * theta)) + (1 + k1/(1  + (k1 * theta)**2)) * sin(delta))
-      vc = v / (1 + beta * (abs(k)**gamma))
-      w = k*vc
-      v_r = vc + b*w/2
-      v_l = vc - b*w/2
-      
-      print "State: ", "bot ",bot,"dest ", dest,"bot_a ", bot_a,"delta ", delta,"theta ", theta,"r ", r
-      print "Control: ","k ", k,"vc ", vc,"w ", w,"v_r ", v_r,"v_l ", v_l
-      print ""
-      #sleep(1)
       
       #Bot propagation
       bot_v = (v_r + v_l)/2
@@ -136,14 +114,14 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
       bot[1] += bot_v*sin(bot_a)*dt
       
       #Environment propagation
-      v_ra = v_r + v_al + v_err*normal()
+      v_ra = v_r + v_err*normal()
       v_la = v_l + v_err*normal()
       env_v = (v_ra + v_la)/2
-      env_w = (v_ra-v_la)/b
+      w = (v_ra-v_la)/b
       
       env[0] += env_v*cos(env_a)*dt
       env[1] += env_v*sin(env_a)*dt
-      env_a = restrict_angle(env_a + env_w*dt)
+      env_a += w*dt
       
       x.append(env[0])
       y.append(env[1])
@@ -151,6 +129,8 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
       
       err += abs((dest[0]-prev_dest[0])*(prev_dest[1]-env[1])-(dest[1]-prev_dest[1])*(prev_dest[0]-env[0]))*dt/norm(dest-prev_dest)
    
+    prev_dest = dest.copy()
+
   err /= t*path
   corr /= path
   return [x, y, gx, gy, corr, err]
