@@ -55,7 +55,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
   
   #Control Law constants
   k1 = 1
-  k2 = 10
+  k2 = 100
   beta = 0.1
   gamma = 0.4
 
@@ -90,7 +90,7 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
     
     r = 1
 
-    while r > 0.1:
+    while r > 0.01:
       hit = horiz_grid() 
       if hit:
         no_y = hit
@@ -121,7 +121,19 @@ def simulate(n, l, initial, init_a, dests, v, c_slip=5e-2, c_mag=5e-2, c_align=1
       #Calculate kappa, v and omega
       k = (-1.0 / r) * (k2 * (delta - arctan(-k1 * theta)) + (1 + k1/(1  + (k1 * theta)**2)) * sin(delta))
       vc = v / (1 + beta * (abs(k)**gamma))
+      
       w = k*vc
+      if w > 10:
+        w = 10
+      elif w < -10:
+        w = -10 
+      #~ if r < 0.1:
+        #~ vc = 0.05
+        #~ w = k*vc
+        #~ if w > 10:
+          #~ w = 10
+        #~ elif w < -10:
+          #~ w = -10 
       v_r = vc + b*w/2
       v_l = vc - b*w/2
       

@@ -4,18 +4,15 @@ from sim import simulate
 l = 10.0
 
 #Destination
-dests = array([
-[l/5,l/5],
-[2*l/5,2*l/5],
-[3*l/5,3*l/5],
-[4*l/5,4*l/5],
-[l,l]
-])
+dests = []
+for i in arange(0.1*l, 1.1*l, 0.1*l):
+	dests.append([i,i])
+dests = array(dests)
 
 #initial point
 initial = [0.0, 0.0]
 
-[x, y, gx, gy, corr, err] = simulate(10, l, initial, pi/2, dests, 1.0)
+[x, y, gx, gy, corr, err] = simulate(10, l, initial, pi/2, dests, 1)
 
 print err
 print corr
