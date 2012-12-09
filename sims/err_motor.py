@@ -15,17 +15,17 @@ l = 10.0
 #[4*l/5,4*l/5],
 #[l,l]
 #])
-dests = array(curvature(10))
-#dests = []
-#for i in arange(0.1*l, 1.1*l, 0.1*l):
-#	dests.append([i,i])
-#dests = array(dests)
-for n in range(0, 10):
+#dests = array(curvature(10))
+dests = []
+for i in arange(0.1*l, 1.1*l, 0.1*l):
+	dests.append([i,i])
+dests = array(dests)
+for n in arange(0, 0.2,0.01):
  errs = []
  corrs=[]  
  for j in range(0,100):
     print n,j
-    tmp = simulate(n, l, initial, pi/2, dests, 1.0,1,100,0.21)
+    tmp = simulate(9, l, initial, pi/2, dests, 1.0,1,100,n)
     errs.append(tmp[-1])
  #   corrs.append(tmp[-2])
 

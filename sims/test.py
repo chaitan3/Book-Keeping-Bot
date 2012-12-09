@@ -12,7 +12,7 @@ dests = array(dests)
 #initial point
 initial = [0.0, 0.0]
 
-[x, y, gx, gy, corr, err] = simulate(10, l, initial, pi/2, dests, 1)
+[x, y, gx, gy, corr, err] = simulate(9, l, initial, pi/2, dests, 1.0,1,100)
 
 print err
 print corr

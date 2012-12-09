@@ -1,3 +1,4 @@
+
 from pylab import *
 from time import sleep
 from math import *
@@ -127,7 +128,7 @@ def simulate(n, l, initial, init_a, dests, v, k1, k2, c_slip=0.05, c_align=0.1, 
         corr += 1
         
       #Bot reads magnetometer
-      bot_a = restrict_angle(env_a + a_err*normal())
+      bot_a = restrict_angle(env_a + a_err)#*normal())
       
       #Control Law
       #Calculate delta, theta and r
@@ -174,8 +175,8 @@ def simulate(n, l, initial, init_a, dests, v, k1, k2, c_slip=0.05, c_align=0.1, 
       #Vs.append(convolve())
       Vs = [[v_r, v_l]]
       
-      v_ra = Vs[-1][0] + v_al + v_err*normal()
-      v_la = Vs[-1][1] + v_err*normal()
+      v_ra = Vs[-1][0] + v_al + v_err#*normal()
+      v_la = Vs[-1][1] + v_err#*normal()
       env_v = (v_ra + v_la)/2
       env_w = (v_ra-v_la)/b
       
